@@ -3,9 +3,10 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 //file imports
-import ratelimiter from "./src/middleware/rateLimiter.js";
-import transactionRoutes from "./src/routes/transactionRoutes.js" 
-import { sql } from "./src/config/db.js";
+import ratelimiter from "./middleware/rateLimiter.js";
+import transactionRoutes from "./routes/transactionRoutes.js" 
+import { sql } from "./config/db.js";
+import job from "./config/cron.js";
 //environment configuration and database connection
 dotenv.config();
 
@@ -13,7 +14,7 @@ const app = express();
 //json parsing
 app.use(express.json());
 app.use(ratelimiter)
-
+if(process.env.NODE_ENV ==="production") job.start()
 //cross origins
 app.use(
   cors({
